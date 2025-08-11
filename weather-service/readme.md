@@ -1,6 +1,36 @@
+# HOW TO RUN
+## Program execution
+Run `sudo docker-compose up --build` from `dev-challenge/weather-service`
+In your host open the webrowser and to the url: https://localhost.com/weather?city=<your-city>
 
+## Pytest
+To run pytests go to `dev-challenge/weather-service` and run `pytest` or `pytest tests/`
 
-# Resilient Weather Service
+# PROJECT STRUCTURE
+```
+weather-service
+├── app
+│   ├── __init__.py: initialises Redis and Flask
+│   ├── externals.py: simulates external calls
+│   ├── routes.py: app endpoints
+│   └── structures.py: file containing custom classes for type hinting
+├── tests
+│   ├── conftest.py: config file for mocking Redis, etc.
+│   └── test_app.py: unit test file
+├── docker-compose.yaml
+├── Dockerfile
+├── pytest.ini
+├── readme.md
+└── requirements.txt
+```
+# ASSUMPTIONS
+* Assuming all data (24 entry for each hour in the day), the wather data of a single city is roughly 1.6Kbytes. Having 2500 cities, the total memory would roughly 4Mbytes which is fine for Redis
+* The function which is simulating external call is assuming (just for simplicity) the same time zone in order to focus on app development
+* The hour date is available at the beginning of each hour
+
+# REQUIREMENTS
+
+## Resilient Weather Service
 build a backend API that exposes weather data to a frontend. The frontend requests the today's weather for the city the user is in — there's a catch: the only way to get weather information is via an external weather API that is rate-limited.
 
 Your goal is to design a resilient backend that:
