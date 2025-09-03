@@ -4,7 +4,8 @@ Run `sudo docker-compose up --build` from `dev-challenge/weather-service`
 In your host open the webrowser and to the url: https://localhost.com/weather?city=<your-city>
 
 ## Pytest
-To run pytests go to `dev-challenge/weather-service` and run `pytest` or `pytest tests/`
+Install pytest on your host or you virtualenvironment.
+To run pytests go to `dev-challenge/weather-service` and run `pytest` or `pytest tests/`. 
 
 # PROJECT STRUCTURE
 ```

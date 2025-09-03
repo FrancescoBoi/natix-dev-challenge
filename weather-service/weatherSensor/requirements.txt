@@ -1,0 +1,4 @@
+pytest
+pydantic
+kafka-python
+confluent-kafka

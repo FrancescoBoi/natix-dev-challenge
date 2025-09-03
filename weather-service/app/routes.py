@@ -6,7 +6,8 @@ import json
 from typing import Optional
 from flask import request, jsonify
 from app import app, redis
-from app.structures import HourlyData, RedisEntry, Date, APIWeatherData
+from app.structures import APIWeatherData
+from app.redis_structures import Date, HourlyData, RedisEntry
 from app.externals import get_weather_data
 
 def get_last_update(last_updated: Optional[Date]=None) -> bool:
@@ -34,7 +35,7 @@ def get_last_update(last_updated: Optional[Date]=None) -> bool:
     return new_update_date
 
 
-@app.route('/weather')
+@app.route('/weather', methods=['GET']) # By default it accepts only GET methods
 def weather():
     """
     Decorator for "/weather" endpoing
@@ -56,7 +57,7 @@ def weather():
         weather_data: APIWeatherData = APIWeatherData.model_validate(get_weather_data(city))
         for hour_weather in weather_data.result:
             hour_weather_json = hour_weather.model_dump()
-            new_entry.data.append({int( hour_weather_json.pop("hour")) : hour_weather_json})
+            new_entry.data.append({int( hour_weather_json.pop("hour")) : HourlyData.model_validate(hour_weather_json)})
         redis.set(city, new_entry.model_dump_json())
         last_weather_data = weather_data
     else:
