@@ -1,2 +1,2 @@
-weather-service/kafka/data/*
+**/kafka/data/
 *.pyc
