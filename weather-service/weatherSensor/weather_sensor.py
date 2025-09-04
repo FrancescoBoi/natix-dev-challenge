@@ -1,7 +1,8 @@
 import os
 import time, datetime
 from confluent_kafka import Producer
-
+from random import randint
+import json
 
 LOCATION_KEY="LOCATION"
 # Optional delivery callback
@@ -17,12 +18,13 @@ if __name__=="__main__":
     LOCATION = os.getenv(LOCATION_KEY)
     KAFKA_HOST = "kafka:9092" # Or the address you want
     producer = Producer({"bootstrap.servers": KAFKA_HOST})
-    topic = "testTopic"
+    topic = "weather_"+LOCATION
+    print(topic)
     while True:
         MESSAGE = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
-        ENCODED_MESSAGE = MESSAGE.encode("utf-8")
+        MESSAGE = {"temperature_celsius": randint(20, 35), "weather": "Cloudy", "Humidity": "50%", "Alert": "No", "time": MESSAGE}
         try:
-            producer.produce(topic=topic, key=LOCATION, value=ENCODED_MESSAGE, on_delivery=delivery_report)
+            producer.produce(topic=topic, key=LOCATION, value=json.dumps(MESSAGE).encode('utf-8'), on_delivery=delivery_report)
             producer.flush()
         except Exception as ex:
             print("Exception happened :",ex)

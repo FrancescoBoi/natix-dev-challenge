@@ -43,13 +43,24 @@ services:
       - ./kafka/data:/var/lib/kafka/data  # Maps logs to local storage.
   CagliariProducer:
     build:
-      context: ./weatherSensor
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: weatherSensor/Dockerfile
     image: weathersensor:latest
     container_name: CagliariWeatherSensor
-    volumes:
-      - ./weatherSensor:/weatherSensorCagliari
+    # volumes:
+    #   - ./weatherSensor:/weatherSensorCagliari #avoid overwriting already copied files
     environment:
       - LOCATION=Cagliari
     depends_on:
       - kafka
+  Transformer:
+    build:
+      context: ./
+      dockerfile: transformer/Dockerfile
+    image: transformer:latest
+    container_name: Transformer
+    environment:
+      - LOCATION=Cagliari
+    depends_on:
+      - kafka
+      - CagliariProducer
